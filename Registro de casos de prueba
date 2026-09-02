@@ -1,0 +1,4 @@
+| Enviar sugerencia completa      | Se guarda y limpia el form  | si |
+| Enviar con mensaje vacío        | El servidor no la guarda    | si |
+| Ver panel de administración     | Aparece la lista completa   | si |
+| Visitar una ruta inexistente    | Devuelve error 404 en JSON  | si |
