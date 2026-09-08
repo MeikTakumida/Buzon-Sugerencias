@@ -9,7 +9,7 @@
   <div id="lista"></div>
 
   <script>
-    async function cargarSugerencias() { try {
+    async function cargarSugerencias() { 
       const respuesta = await fetch('/api/sugerencias');
       const sugerencias = await respuesta.json();
       const contenedor = document.getElementById('lista');
