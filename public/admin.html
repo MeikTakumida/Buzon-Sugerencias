@@ -39,23 +39,51 @@
 
   
   <script>
-    async function cargarSugerencias() {
+  async function cargarSugerencias() {
+    try {
       const respuesta = await fetch('/api/sugerencias');
       const sugerencias = await respuesta.json();
+
       const contenedor = document.getElementById('lista');
 
-      sugerencias.forEach(s => {
+      // Obtener la categoría seleccionada desde la URL
+      const parametros = new URLSearchParams(window.location.search);
+      const categoriaMarcada = parametros.get('categoria');
+
+      // Filtrar las sugerencias por categoría
+      const sugerenciasFiltradas = sugerencias.filter(s =>
+        s.categoria === categoriaMarcada
+      );
+
+      // Mostrar únicamente las sugerencias de esa categoría
+      sugerenciasFiltradas.forEach(s => {
         const div = document.createElement('div');
+
         div.innerHTML = `
-          <p><strong>${s.categoria}</strong></p>
-          <p><strong>${s.Prioridad}</strong></p>
+          <p><strong>Categoría:</strong> ${s.categoria}</p>
+          <p><strong>Prioridad:</strong> ${s.Prioridad}</p>
           <p>${s.mensaje}</p>
           <small>${s.nombre || 'Anónimo'}</small>
+          <hr>
         `;
+
         contenedor.appendChild(div);
       });
+
+      // Si no hay sugerencias
+      if (sugerenciasFiltradas.length === 0) {
+        contenedor.innerHTML = `
+          <p>No hay sugerencias para la categoría ${categoriaMarcada}.</p>
+        `;
+      }
+
+    } catch (error) {
+      console.error('Error al cargar las sugerencias:', error);
     }
-    cargarSugerencias();
-  </script>
+  }
+
+  cargarSugerencias();
+</script>
+
 </body>
 </html>
