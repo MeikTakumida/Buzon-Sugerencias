@@ -4,103 +4,58 @@
   <meta charset="UTF-8">
   <title>Panel de administración</title>
 </head>
-
 <body>
-
   <h1>Sugerencias recibidas</h1>
+  <div id="lista"></div>
 
-  <!-- Panel de Cafetería -->
-  <div id="Cafetería" style="display: none;">
-    <h2>Estás administrando: Cafetería</h2>
-    <div id="listaCafeteria"></div>
-  </div>
+<!-- 1. Los paneles de administración (Ocultos inicialmente con style="display: none;") -->
+<div id="Cafetería" style="display: none;">
+  <h2>Estás administrando: Cafeteria</h2>
+  <!-- Aquí pones tus tablas, formularios o contenido de la cat 1 -->
+</div>
 
-  <!-- Panel de Biblioteca -->
-  <div id="Biblioteca" style="display: none;">
-    <h2>Estás administrando: Biblioteca</h2>
-    <div id="listaBiblioteca"></div>
-  </div>
+<div id="Biblioteca" style="display: none;">
+  <h2>Estás administrando: Biblioteca</h2>
+  <!-- Aquí pones tus tablas, formularios o contenido de la cat 2 -->
+</div>
 
 
+<!-- 2. El script que hace la magia de filtrar -->
+<script>
+  // Captura lo que viene en la URL (por ejemplo: admin.html?categoria=categoria1)
+  const parametros = new URLSearchParams(window.location.search);
+  const categoriaMarcada = parametros.get('categoria');
+
+  // Evalúa qué categoría se marcó y la vuelve visible
+  if (categoriaMarcada === 'Cafetería') {
+    document.getElementById('Cafetería').style.display = 'block';
+  } else if (categoriaMarcada === 'Biblioteca') {
+    document.getElementById('Biblioteca').style.display = 'block';
+  } else {
+    // Opcional: Qué pasa si entran a admin.html sin marcar nada
+    alert("Por favor, selecciona una categoría válida en el index.");
+  }
+</script>
+
+  
   <script>
-    const parametros = new URLSearchParams(window.location.search);
-    const categoriaMarcada = parametros.get('categoria');
-
-
-    // Mostrar solamente el panel correspondiente
-    if (categoriaMarcada === 'Cafetería') {
-
-      document.getElementById('Cafetería').style.display = 'block';
-
-    } else if (categoriaMarcada === 'Biblioteca') {
-
-      document.getElementById('Biblioteca').style.display = 'block';
-
-    } else {
-
-      // Si no se seleccionó ninguna categoría
-      document.body.innerHTML += `
-        <p>No se ha seleccionado ninguna categoría.</p>
-      `;
-    }
-
-
-    // Cargar las sugerencias
     async function cargarSugerencias() {
-
       const respuesta = await fetch('/api/sugerencias');
       const sugerencias = await respuesta.json();
+      const contenedor = document.getElementById('lista');
 
-
-      // Filtrar las sugerencias según la categoría seleccionada
-      const sugerenciasFiltradas = sugerencias.filter(s =>
-        s.categoria === categoriaMarcada
-      );
-
-
-      // Elegir dónde mostrar las sugerencias
-      let contenedor;
-
-      if (categoriaMarcada === 'Cafetería') {
-        contenedor = document.getElementById('listaCafeteria');
-
-      } else if (categoriaMarcada === 'Biblioteca') {
-        contenedor = document.getElementById('listaBiblioteca');
-
-      } else {
-        return;
-      }
-
-
-      // Mostrar solamente las sugerencias de esa categoría
-      sugerenciasFiltradas.forEach(s => {
-
+      sugerencias.forEach(s => {
         const div = document.createElement('div');
-
         div.innerHTML = `
-          <hr>
-          <p><strong>Prioridad:</strong> ${s.Prioridad}</p>
+          <p><strong>${s.categoria}</strong></p>
+          <p><strong>${s.Prioridad}</strong></p>
           <p>${s.mensaje}</p>
           <small>${s.nombre || 'Anónimo'}</small>
         `;
-
         contenedor.appendChild(div);
       });
-
-
-      // Si no hay sugerencias
-      if (sugerenciasFiltradas.length === 0) {
-
-        contenedor.innerHTML = `
-          <p>No hay sugerencias para esta categoría.</p>
-        `;
-      }
     }
-
-
     cargarSugerencias();
-
   </script>
-
 </body>
 </html>
