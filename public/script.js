@@ -10,6 +10,7 @@ formulario.addEventListener('submit', async (e) => {
     body: JSON.stringify({
       nombre: datos.get('nombre'),
       categoria: datos.get('categoria'),
+      Prioridad: datos.get('Prioridad'),
       mensaje: datos.get('mensaje')
     })
   });
