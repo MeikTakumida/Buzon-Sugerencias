@@ -7,8 +7,8 @@ let sugerencias = [];
 
 // recibir una sugerencia nueva
 app.post('/api/sugerencias', (req, res) => {
-  const { nombre, categoria, mensaje } = req.body;
-  sugerencias.push({ nombre, categoria, mensaje, fecha: new Date() });
+  const { nombre, categoria,Prioridad, mensaje } = req.body;
+  sugerencias.push({ nombre, categoria,Prioridad, mensaje, fecha: new Date() });
   res.status(201).json({ ok: true });
 });
 
